@@ -1,14 +1,11 @@
 #include "../include/Particles.hpp"
-Particles::Particles(){rulesApply = false;};
+Particles::Particles(){
+    rulesApply = false;
+}
+
 void Particles::addVector(const std::vector<Particle> &particleVector){
-    if(!particleVector.empty()){
-        sf::Color color = particleVector[0].getColor(); 
-        std::string colorKey = std::to_string(color.r) + "-" + std::to_string(color.g) + "-" + std::to_string(color.b); 
-        std::cout << colorKey << std::endl;
-        particles[colorKey] = particleVector;
-    }
-    else{
-        std::cout << "Particles::addVector: vector is empty" << std::endl;
+    for(const auto& particle : particleVector){
+        grid.insert(particle);
     }
 }
 void Particles::addRule(Rule rule){
@@ -16,9 +13,11 @@ void Particles::addRule(Rule rule){
 }
 
 void Particles::draw(){
-    for(const auto &particleVector : particles){
-        for(const Particle &particle: particleVector.second){
-            particle.draw();
+    for(auto& colorMap : grid.grid){
+        for(auto& particleVector: colorMap.second){ 
+            for(Particle& particle : particleVector.second){
+                particle.draw();
+            }
         }
     }
 }
@@ -27,6 +26,17 @@ void Particles::applyRules(){
 }
 void Particles::update(){
     if(rulesApply){
-
+        for(auto& positionMap : grid.grid){
+            for(Rule& rule : rules){
+                auto& cell = positionMap.second;
+                auto it = cell.find(rule.color1);
+                if(it != cell.end()){  // found particles with color of rule 1 inside cell
+                    auto it2 = cell.find(rule.color2); 
+                    if(it2 != cell.end()){ // found particles with color 2 inside same cell
+                    // check distance -> apply physics 
+                    }
+                }
+            }
+        }
     }
 }

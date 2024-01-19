@@ -3,9 +3,9 @@
 class Rule{
 private:
 public:
-    sf::Color color1;
-    sf::Color color2;
+    std::string color1;
+    std::string color2;
     float magnitude;
     Rule() = delete;
-    Rule(sf::Color Color1, sf::Color Color2);
+    Rule(std::string Color1, std::string Color2, float Magnitude);
 };

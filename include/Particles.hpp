@@ -1,6 +1,7 @@
 #include "Particle.hpp"
 #include "Rule.hpp"
 #include "config.hpp"
+#include "SpatialHashGrid.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <vector>
 #include <unordered_map>
@@ -9,8 +10,8 @@
 
 class Particles{
 private:
-    std::unordered_map<std::string, std::vector<Particle>> particles;
     std::vector<Rule> rules;
+    SpatialHashGrid grid;
     bool rulesApply;
 public:
     Particles();

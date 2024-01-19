@@ -6,14 +6,17 @@ find_package(
   COMPONENTS system window graphics
   REQUIRED)
 # Copy image files to the build directory
+set(CMAKE_CXX_STANDARD 23)
 set(SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/src/colorToStr.cpp
     ${CMAKE_SOURCE_DIR}/src/config.cpp
     ${CMAKE_SOURCE_DIR}/src/Rule.cpp
     ${CMAKE_SOURCE_DIR}/src/Particle.cpp
-    ${CMAKE_SOURCE_DIR}/src/Particles.cpp
     ${CMAKE_SOURCE_DIR}/src/applyPhysics.cpp
     ${CMAKE_SOURCE_DIR}/src/initParticles.cpp
     ${CMAKE_SOURCE_DIR}/src/Field.cpp
+    ${CMAKE_SOURCE_DIR}/src/SpatialHashGrid.cpp
+    ${CMAKE_SOURCE_DIR}/src/Particles.cpp
     ${CMAKE_SOURCE_DIR}/src/main.cpp
 )
 
