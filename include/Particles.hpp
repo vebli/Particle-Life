@@ -4,10 +4,12 @@
 #include "findDistance.hpp"
 #include "SpatialHashGrid.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
 
+extern sf::RenderWindow window;
 
 class Particles{
 private:
