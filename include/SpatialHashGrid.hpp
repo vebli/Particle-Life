@@ -5,7 +5,6 @@
 #include "config.hpp"
 #include "Particle.hpp"
 #include "colorToStr.hpp"
-
 class SpatialHashGrid{
 private:
 

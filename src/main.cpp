@@ -21,6 +21,7 @@ int main(){
     Particles particles;
     particles.addVector((initParticles(sf::Color::Green, 100, field)));
     particles.addVector((initParticles(sf::Color::Yellow, 10, field)));
+    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), 0.0001));
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
@@ -31,8 +32,11 @@ int main(){
 
         //draw
         window.clear();
+        particles.update();
         particles.draw();
         window.display();
+        std::cin.get();
+        particles.applyRules();
         //rule("red", "blue", 10);
         //std::cin.get();
         // applyRules();

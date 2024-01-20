@@ -1,6 +1,7 @@
 #include "Particle.hpp"
 #include "Rule.hpp"
 #include "config.hpp"
+#include "findDistance.hpp"
 #include "SpatialHashGrid.hpp"
 #include <SFML/Graphics/Color.hpp>
 #include <vector>

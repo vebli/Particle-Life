@@ -9,6 +9,7 @@ find_package(
 set(CMAKE_CXX_STANDARD 23)
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/colorToStr.cpp
+    ${CMAKE_SOURCE_DIR}/src/findDistance.cpp
     ${CMAKE_SOURCE_DIR}/src/config.cpp
     ${CMAKE_SOURCE_DIR}/src/Rule.cpp
     ${CMAKE_SOURCE_DIR}/src/Particle.cpp
