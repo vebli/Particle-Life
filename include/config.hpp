@@ -6,8 +6,10 @@
 
 // Particles
 extern const float particleRadius;
-extern const float threshholdRadius;
+extern const float thresholdRadius;
 extern const std::unordered_map<std::string, sf::Color> strTosfColor;
+extern const float particleEquilibrium;
+extern const float delta_t;
 
 // SpatialHashMap
 extern const float cellSize;

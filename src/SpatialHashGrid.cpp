@@ -7,8 +7,7 @@ void SpatialHashGrid::insert(const Particle& particle){
     const int cellX = static_cast<int>(particle.getPosition().x / cellSize);
     const int cellY = static_cast<int>(particle.getPosition().y / cellSize);
 
-    const sf::Color color = particle.getColor();
-    std::string colorKey = colorToStr(color);
+    const std::string colorKey = particle.getColor();
 
     grid[{cellX, cellY}][colorKey].push_back(particle);
 }
