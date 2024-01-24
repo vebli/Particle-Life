@@ -78,49 +78,56 @@ void Particles::update(){
         float newPositionX;
         float newPositionY;
         float distance;
-        std::map<std::string, std::vector<Particle>>::iterator it1;
+        std::map<std::string, std::vector<Particle>>::iterator itColor2VecPair;
+        std::map<std::string, std::vector<Particle>>::iterator itColor1VecPair;
         std::pair<int,int> cellIndex;
         sf::Vector2f direction;
         sf::Vector2f acceleration;
-        for(auto& positionMap : grid.grid){
+        for(auto& positionMapPair : grid.grid){
+            auto& colorParticlesPair = positionMapPair.second;
+            cellIndex = positionMapPair.first;
             for(Rule& rule : rules){
-                auto& cell = positionMap.second;
-                cellIndex = positionMap.first;
+                itColor1VecPair = colorParticlesPair.find(rule.color1);
+                if(itColor1VecPair == colorParticlesPair.end()){continue;}
+
                 for(int i = -1; i <= 1; i++){
                     for(int j = -1; j <= 1; j++){
                         try{
-                            it1 = grid.grid.at({cellIndex.first + i, cellIndex.second + i}).find(rule.color1);
+                            itColor2VecPair = grid.grid.at({cellIndex.first + j, cellIndex.second + i}).find(rule.color2);
                         }
                         catch(const std::out_of_range& e){
                             continue; 
                         }
-                        if(it1 != cell.end()){
-                            auto it2 = cell.find(rule.color2);
-                            if(it2 != cell.end()){
-                                std::vector<Particle>& coloredParticles1 = (*it1).second;
-                                std::vector<Particle>& coloredParticles2 = (*it2).second;
-                                for(Particle& p1 : coloredParticles1){
-                                    for(Particle& p2 : coloredParticles2){
-                                        if(&p1 == &p2){continue;}
-                                        distance = std::sqrt(
-                                                std::pow(p2.getPosition().x - p1.getPosition().x,2) + 
-                                                std::pow(p2.getPosition().y - p1.getPosition().y,2)
-                                                );
+                        if(itColor2VecPair == grid.grid.at({cellIndex.first + j, cellIndex.second + i}).end()){continue;}
 
-                                        if(distance <= thresholdRadius){
-                                            direction.x = (distance != 0) ? (p1.getPosition().x- p2.getPosition().x) / distance :
-                                                -1;
-                                            direction.y = (distance != 0) ? (p1.getPosition().y- p2.getPosition().y) / distance :
-                                                -1;
-                                            acceleration.x = direction.x * thresholdRadius * force(distance/thresholdRadius, rule.magnitude);
-                                            acceleration.y = direction.y * thresholdRadius *force(distance/thresholdRadius, rule.magnitude);
-                                            p2.addVelocity(sf::Vector2f(acceleration.x * delta_t, acceleration.y * delta_t));
-                                            // std::cout << "distance: " << distance << std::endl;
-                                            // std::cout  << "force: " << force(distance, rule.magnitude) << std::endl;
-                                            // std::cout << "direction: " << direction.x << "," << direction.y << std::endl;
-                                            // std::cout << "acceleration: " << acceleration.x << "," << acceleration.y << std::endl;
-                                        }
-                                    }
+                        std::vector<Particle>& coloredParticles1 = (*itColor1VecPair).second;
+                        std::vector<Particle>& coloredParticles2 = (*itColor2VecPair).second;
+                        std::cout << coloredParticles1.size() << std::endl;
+                        std::cout << coloredParticles2.size() << std::endl;
+                        for(Particle& p1 : coloredParticles1){
+                            for(Particle& p2 : coloredParticles2){
+                                if(&p1 == &p2){continue;}
+                                std::cout << grid.grid.size() << std::endl;
+                                // std::cout << coloredParticles1.size() << std::endl;
+                                // std::cout << coloredParticles2.size() << std::endl;
+                                // std::cout << "comparison " << comparisons << ":\t" << p1.getColor() << " to " << p2.getColor() << std::endl;
+                                distance = std::sqrt(
+                                        std::pow(p2.getPosition().x - p1.getPosition().x,2) + 
+                                        std::pow(p2.getPosition().y - p1.getPosition().y,2)
+                                        );
+
+                                if(distance <= thresholdRadius){
+                                    direction.x = (distance != 0) ? (p1.getPosition().x- p2.getPosition().x) / distance :
+                                        0;
+                                    direction.y = (distance != 0) ? (p1.getPosition().y- p2.getPosition().y) / distance :
+                                        0;
+                                    acceleration.x = direction.x * thresholdRadius * force(distance/thresholdRadius, rule.magnitude);
+                                    acceleration.y = direction.y * thresholdRadius *force(distance/thresholdRadius, rule.magnitude);
+                                    p2.addVelocity(sf::Vector2f(acceleration.x * delta_t, acceleration.y * delta_t));
+                                    // std::cout << "distance: " << distance << std::endl;
+                                    // std::cout  << "force: " << force(distance, rule.magnitude) << std::endl;
+                                    // std::cout << "direction: " << direction.x << "," << direction.y << std::endl;
+                                    // std::cout << "acceleration: " << acceleration.x << "," << acceleration.y << std::endl;
                                 }
                             }
                         }
@@ -128,13 +135,25 @@ void Particles::update(){
                 }
             }
         }
-        for(auto& mapPair : grid.grid){
-            for(auto& mapPair2 : mapPair.second){
-                for(auto& particle : mapPair2.second){
-                   particle.update(); 
-                   std::cout << particle.getColor() << ": " << particle.getVelocity().x << "," << particle.getVelocity().y << std::endl;
+        size_t size = 0;
+        for(auto& positionMapPair: grid.grid){
+            for(auto& colorParticlesPair : positionMapPair.second){
+                auto& particles = colorParticlesPair.second;
+                for(int i = 0; i < particles.size(); i++){
+                    size++;
+                    Particle& particle = particles[i];
+                    if(
+                            static_cast<int>(particle.getPosition().x) == positionMapPair.first.first &&
+                            static_cast<int>(particle.getPosition().y) == positionMapPair.first.second
+                      ){
+                        continue;
+                    }
+                    particle.update(); 
+                    grid.insert(particle);
+                    particles.erase(particles.begin() + i);
                 }
             } 
         }
+        std::cout << "size:\t "<< size << std::endl;
     }
 }

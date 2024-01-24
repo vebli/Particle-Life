@@ -7,6 +7,9 @@ find_package(
   REQUIRED)
 # Copy image files to the build directory
 set(CMAKE_CXX_STANDARD 23)
+# set(CMAKE_BUILD_TYPE Debug)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fno-omit-frame-pointer -fsanitize=address")
+
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/colorToStr.cpp
     ${CMAKE_SOURCE_DIR}/src/findDistance.cpp

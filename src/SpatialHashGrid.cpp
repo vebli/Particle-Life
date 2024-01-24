@@ -3,7 +3,6 @@
 SpatialHashGrid::SpatialHashGrid(){};
 
 void SpatialHashGrid::insert(const Particle& particle){
-    sf::Vector2f cellIndex(static_cast<int>(particle.getPosition().x),  static_cast<int>(particle.getPosition().y));
     const int cellX = static_cast<int>(particle.getPosition().x / cellSize);
     const int cellY = static_cast<int>(particle.getPosition().y / cellSize);
 
@@ -12,8 +11,7 @@ void SpatialHashGrid::insert(const Particle& particle){
     grid[{cellX, cellY}][colorKey].push_back(particle);
 }
 
-const std::vector<Particle>& SpatialHashGrid::getCellParticles(sf::Color color, int cellX, int cellY){
-    std::string colorKey = colorToStr(color);
-    return grid.at({cellX, cellY}).at(colorKey);
+std::vector<Particle>& SpatialHashGrid::getCellParticles(std::string color, int cellX, int cellY){
+    return grid.at({cellX, cellY}).at(color);
 }
 

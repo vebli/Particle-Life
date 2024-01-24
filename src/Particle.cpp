@@ -14,7 +14,7 @@ void Particle::setPosition(sf::Vector2f Position){
     position = Position;
 }
 sf::Vector2f Particle::getPosition() const{
-    return sprite.getPosition();
+    return position;
 }
 void Particle::draw () const{
     window.draw(sprite);

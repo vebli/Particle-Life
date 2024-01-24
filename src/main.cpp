@@ -25,13 +25,14 @@ int main(){
             visualgrid.push_back(p1);
         }
     }
-    Field field(sf::Vector2f(thresholdRadius*2, thresholdRadius*2), sf::Vector2f(thresholdRadius*3,thresholdRadius*3));
+    Field field(sf::Vector2f(thresholdRadius*1, thresholdRadius*1), sf::Vector2f(thresholdRadius*5,thresholdRadius*5));
     Particles particles;
-    particles.addVector((initParticles(sf::Color::Green, 1, field)));
-    particles.addVector((initParticles(sf::Color::Yellow, 1, field)));
+    particles.addVector((initParticles(sf::Color::Green, 100, field)));
+    particles.addVector((initParticles(sf::Color::Yellow, 100, field)));
     particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), 0.3));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), -0.6));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 10));
+    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.3));
+    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.3));
+    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.3));
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
@@ -48,12 +49,11 @@ int main(){
         }
         particles.draw();
         window.display();
-        std::cin.get();
         particles.applyRules();
         //rule("red", "blue", 10);
         //std::cin.get();
         // applyRules();
-        window.setFramerateLimit(30);
+        window.setFramerateLimit(60);
     }
     return 0;
 }

@@ -12,5 +12,5 @@ public:
     std::map<std::pair<int, int>, std::map<std::string, std::vector<Particle>>> grid;
     SpatialHashGrid();
     void insert(const Particle& particle);
-    const std::vector<Particle>& getCellParticles(sf::Color color, int cellX, int cellY);
+    std::vector<Particle>& getCellParticles(std::string color, int cellX, int cellY);
 };
