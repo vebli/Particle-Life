@@ -10,6 +10,7 @@
 #include "../include/config.hpp"
 #include "../include/initParticles.hpp"
 
+float fps;
 sf::CircleShape dot;
 std::vector<sf::CircleShape> visualgrid;
 
@@ -25,23 +26,18 @@ int main(){
             visualgrid.push_back(dot);
         }
     }
-    float fps;
-    // Field field(sf::Vector2f(thresholdRadius*4, thresholdRadius*4), sf::Vector2f(thresholdRadius*8,thresholdRadius*8));
+    // Field field(sf::Vector2f(thresholdRadius*3, thresholdRadius*3), sf::Vector2f(thresholdRadius*5,thresholdRadius*5));
     Field field(sf::Vector2f(0, 0), sf::Vector2f(window.getSize().x, window.getSize().y));
     Particles particles;
     particles.addVector((initParticles(sf::Color::Green, 1000, field)));
-    particles.addVector((initParticles(sf::Color::Yellow, 1000, field)));
-    particles.addVector((initParticles(sf::Color::Blue, 1000, field)));
-    // particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), -0.5));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.5));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Green), 1));
-    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), -5));
-    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 5));
-    particles.addRule(Rule(colorToStr(sf::Color::Blue), colorToStr(sf::Color::Green), 5));
-    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Blue), 5));
-    // particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Yellow), 1));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.3));
-    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.3));
+    particles.addVector((initParticles(sf::Color::Yellow, 500, field)));
+    // particles.addVector((initParticles(sf::Color::Blue, 1000, field)));
+
+    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Green), 1));
+    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), 1));
+    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), -1));
+    // particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Blue), 0.1));
+
     std::chrono::high_resolution_clock::time_point start;
     std::chrono::high_resolution_clock::time_point end;
     while (window.isOpen()){
@@ -68,7 +64,8 @@ int main(){
         end = std::chrono::high_resolution_clock::now();
         fps = (float)1e9/(float)std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count();
         std::cout << "fps:" << fps << std::endl;
-        window.setFramerateLimit(1000);
+        window.setFramerateLimit(100);
+        // std::cin.get();
     }
     return 0;
 }
