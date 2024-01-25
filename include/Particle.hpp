@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <limits>
 #include <iostream>
 
 extern sf::RenderWindow window;
