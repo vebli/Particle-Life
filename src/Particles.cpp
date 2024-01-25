@@ -83,6 +83,7 @@ void Particles::update(){
         std::pair<int,int> cellIndex;
         sf::Vector2f direction;
         sf::Vector2f acceleration;
+        int comparisons = 0;
         for(auto& positionMapPair : grid.grid){
             auto& colorParticlesPair = positionMapPair.second;
             cellIndex = positionMapPair.first;
@@ -102,15 +103,13 @@ void Particles::update(){
 
                         std::vector<Particle>& coloredParticles1 = (*itColor1VecPair).second;
                         std::vector<Particle>& coloredParticles2 = (*itColor2VecPair).second;
-                        std::cout << coloredParticles1.size() << std::endl;
-                        std::cout << coloredParticles2.size() << std::endl;
                         for(Particle& p1 : coloredParticles1){
                             for(Particle& p2 : coloredParticles2){
                                 if(&p1 == &p2){continue;}
-                                std::cout << grid.grid.size() << std::endl;
+                                comparisons++;
+                                // std::cout << grid.grid.size() << std::endl;
                                 // std::cout << coloredParticles1.size() << std::endl;
                                 // std::cout << coloredParticles2.size() << std::endl;
-                                // std::cout << "comparison " << comparisons << ":\t" << p1.getColor() << " to " << p2.getColor() << std::endl;
                                 distance = std::sqrt(
                                         std::pow(p2.getPosition().x - p1.getPosition().x,2) + 
                                         std::pow(p2.getPosition().y - p1.getPosition().y,2)
@@ -135,12 +134,13 @@ void Particles::update(){
                 }
             }
         }
-        size_t size = 0;
+        // std::cout << "comparison " << comparisons << std::endl;
+        // size_t size = 0;
         for(auto& positionMapPair: grid.grid){
             for(auto& colorParticlesPair : positionMapPair.second){
                 auto& particles = colorParticlesPair.second;
                 for(int i = 0; i < particles.size(); i++){
-                    size++;
+                    // size++;
                     Particle& particle = particles[i];
                     if(
                             static_cast<int>(particle.getPosition().x) == positionMapPair.first.first &&
@@ -154,6 +154,6 @@ void Particles::update(){
                 }
             } 
         }
-        std::cout << "size:\t "<< size << std::endl;
+        // std::cout << "size:\t "<< size << std::endl;
     }
 }

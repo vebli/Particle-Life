@@ -34,8 +34,12 @@ void Particle::addVelocity(sf::Vector2f v){
 }
 
 void Particle::update(){
-    position = sf::Vector2f(position.x + velocity.x * delta_t, position.y + velocity.y * delta_t);
-    sprite.setPosition(position);
+    sf::Vector2f newPosition(position.x + friction*velocity.x * delta_t, position.y + friction*velocity.y * delta_t);
+    float windowX = window.getSize().x;
+    float windowY = window.getSize().y;
+    // if(newPosition.x < 0 || newPosition.y < 0 || newPosition.x > windowX || newPosition.y > windowY){
+    // }
+        sprite.setPosition(newPosition);
 }
 
 sf::Vector2f Particle::getVelocity(){

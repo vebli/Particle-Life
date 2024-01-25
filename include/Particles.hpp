@@ -7,7 +7,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <vector>
-#include <unordered_map>
 #include <iostream>
 
 extern sf::RenderWindow window;
