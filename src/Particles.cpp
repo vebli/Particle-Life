@@ -47,7 +47,6 @@ void Particles::update(){
         std::unordered_map<std::string, std::vector<Particle>>::iterator itColor2VecPair;
         sf::Vector2f direction;
         sf::Vector2f acceleration;
-        int comparisons = 0;
         for(int cellX = 0; cellX < grid.grid.size(); cellX++){
             for(int cellY = 0; cellY < grid.grid[cellX].size(); cellY++){
                 for(auto& rule : rules){
@@ -78,13 +77,17 @@ void Particles::update(){
                                             );
 
                                     if(distance <= thresholdRadius){
-                                        direction.x = (distance != 0) ? (p1.getPosition().x- p2.getPosition().x) / distance :
+                                        direction.x = (distance != 0) ? (p1.getPosition().x - p2.getPosition().x) / distance :
                                             0;
-                                        direction.y = (distance != 0) ? (p1.getPosition().y- p2.getPosition().y) / distance :
+                                        direction.y = (distance != 0) ? (p1.getPosition().y - p2.getPosition().y) / distance :
                                             0;
                                         acceleration.x = direction.x * thresholdRadius * force(distance/thresholdRadius, rule.magnitude);
-                                        acceleration.y = direction.y * thresholdRadius *force(distance/thresholdRadius, rule.magnitude);
+                                        acceleration.y = direction.y * thresholdRadius * force(distance/thresholdRadius, rule.magnitude);
                                         p2.addVelocity(sf::Vector2f(acceleration.x * delta_t, acceleration.y * delta_t));
+                                        // std::cout << "position:\t" << p1.getPosition().x << "," << p1.getPosition().y << std::endl; 
+                                        // std::cout << "distance:\t" << distance << std::endl; 
+                                        // std::cout << "direction:\t" << direction.x << "," << direction.y << std::endl; 
+                                        // std::cout << "acceleration:\t" << acceleration.x << "," << acceleration.y << std::endl; 
                                     }
                                 }
                             }

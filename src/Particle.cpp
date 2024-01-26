@@ -1,6 +1,8 @@
 #include "../include/Particle.hpp"
 #include <limits>
-Particle::Particle(){};
+Particle::Particle(){
+    sprite.setRadius(particleRadius);
+};
 Particle::Particle(const sf::Color Color, const sf::Vector2f StartingPosition){
     sprite.setFillColor(Color);
     sprite.setRadius(particleRadius);
@@ -21,8 +23,9 @@ void Particle::draw () const{
     window.draw(sprite);
 }
 
-void Particle::setColor(sf::Color color){
-    sprite.setFillColor(color);
+void Particle::setColor(sf::Color Color){
+    sprite.setFillColor(Color);
+    color = colorToStr(Color);
 }
 
 std::string Particle::getColor() const{
@@ -35,18 +38,18 @@ void Particle::addVelocity(sf::Vector2f v){
 }
 
 void Particle::update(){
-    sf::Vector2f newPosition(position.x + friction * velocity.x * delta_t, position.y + friction * velocity.y * delta_t);
+    sf::Vector2f newPosition(position.x + velocity.x * delta_t, position.y + velocity.y * delta_t);
     float windowX = window.getSize().x;
     float windowY = window.getSize().y;
-    // if(newPosition.x < 0 || newPosition.y < 0 || newPosition.x > windowX || newPosition.y > windowY){
-    // }
 
+    // std::cout << velocity.x << "," << velocity.y << std::endl;
     if(newPosition.x >= 0 && newPosition.y >= 0 && newPosition.x <= windowX && newPosition.y <= windowY){
         sprite.setPosition(newPosition);
         position = newPosition;
     }
     
     else{ // wrap around window 
+        // std::cout << "out of bound" << std::endl;
         sf::Vector2f trajectory(newPosition.x - position.x, newPosition.y - position.y);
         float* scalars = new float[4];
         float float_min = std::numeric_limits<float>::min();
@@ -78,8 +81,8 @@ void Particle::update(){
         position = newPosition;
 
     }
-    
-    
+    velocity.x *= friction;
+    velocity.y *= friction;
 }
 
 sf::Vector2f Particle::getVelocity(){
