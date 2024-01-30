@@ -9,8 +9,6 @@
 #include <vector>
 #include <iostream>
 
-extern sf::RenderWindow window;
-
 class Particles{
 private:
     std::vector<Rule> rules;
@@ -24,5 +22,4 @@ public:
     void draw();
     void update();
     void applyRules();
-    sf::Vector2f wrap(sf::Vector2f pos, sf::Vector2f trajectory); 
 };

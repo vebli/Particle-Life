@@ -1,8 +1,8 @@
 #include "../include/SpatialHashGrid.hpp"
 
 SpatialHashGrid::SpatialHashGrid(){
-    int numberOfRows = static_cast<int>(window.getSize().x / cellSize);
-    int numberOfColumns = static_cast<int>(window.getSize().y / cellSize);
+    int numberOfRows = static_cast<int>(gameWindow.getSize().x / cellSize);
+    int numberOfColumns = static_cast<int>(gameWindow.getSize().y / cellSize);
     grid.resize(numberOfRows + 2);
     for(auto& column : grid){ 
         column.resize(numberOfColumns + 2);

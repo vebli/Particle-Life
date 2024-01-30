@@ -21,6 +21,8 @@ set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/imgui/imgui_tables.cpp
     ${CMAKE_SOURCE_DIR}/imgui/imgui_impl_glfw.cpp
     ${CMAKE_SOURCE_DIR}/imgui/imgui_impl_opengl3.cpp
+    #imgui-sfml
+    ${CMAKE_SOURCE_DIR}/imgui/imgui-sfml/imgui-SFML.cpp
 )
 set(SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/colorToStr.cpp
@@ -38,5 +40,5 @@ set(SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${IMGUI_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include ${OPENGL_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/imgui)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include ${OPENGL_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include/imgui ${CMAKE_SOURCE_DIR}/include/imgui-sfml)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-system sfml-window sfml-graphics ${OPENGL_LIBRARIES} glfw)

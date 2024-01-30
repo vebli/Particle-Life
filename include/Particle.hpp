@@ -9,8 +9,6 @@
 #include <limits>
 #include <iostream>
 
-extern sf::RenderWindow window;
-
 class Particle{
 private:
     sf::CircleShape sprite;
