@@ -1,4 +1,4 @@
-#include "../include/initParticles.hpp"
+#include "initParticles.hpp"
 
 std::vector<Particle> initParticles(const sf::Color color,const int amount, Field field){
     std::vector<Particle> particles;

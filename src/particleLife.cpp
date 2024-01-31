@@ -1,4 +1,5 @@
 #include "../include/particleLife.hpp"
+#include <string>
 
 void particleLife(){
     sf::Clock deltaClock;
@@ -53,7 +54,7 @@ void particleLife(){
 
         ImGui::SFML::Update(gameWindow, sf::seconds(1.0f / fpsCap));
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-        ImGui::Begin("Matrix Editor", nullptr, ImGuiWindowFlags_DockNodeHost);
+        ImGui::Begin("Matrix Editor", nullptr, ImGuiWindowFlags_DockNodeHost | ImGuiWindowFlags_NoResize);
 
         int selectedRow = -1;
         int selectedCol = -1;
@@ -66,7 +67,9 @@ void particleLife(){
         static float temp_delta_t = 0;
         ImGui::SliderFloat("delta_t", &temp_delta_t,  0.01f, 1);
 
-        static float color[] = {1.f,0.f,0.f,1.f};
+        bool showFps = false;
+        if(ImGui::Checkbox("show Fps", &showFps)){
+        }
 
         if(ImGui::Button("restart")){
             //Restart Simulation
@@ -85,8 +88,20 @@ void particleLife(){
             //random matrix 
         };
 
+        static float color1[] = {255.f, 0.f, 0.f ,255.f};
+        static float color2[] = {0.f, 255.f, 0.f, 255.f};
+        static float color3[] = {0.f, 0.f, 255.f, 255.f};
+        static float color4[] = {255.f, 255.f, 0.f, 255.f};
+        static float color5[] = {0.f, 255.f, 255.f, 255.f};
+        static float color6[] = {100.f, 255.f, 100.f, 255.f};
+        std::vector<float*> colors{color1, color2, color3, color4, color5, color6};
         ImGui::BeginTable("Matrix", matrixSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit);
-
+        float matrix[matrixSize][matrixSize];
+        for (int y = 0; y < matrixSize; y++){
+            for(int x = 0; x < matrixSize; x++){
+                matrix[x][y] = 0;
+            }
+        }
         for (int row = 0 ; row < matrixSize; row++) {
             ImGui::TableNextRow();
             for (int col = 0; col < matrixSize; col++) {
@@ -94,12 +109,22 @@ void particleLife(){
                     continue;
                 if(col != 0 && row != 0){
                     ImGui::TableSetColumnIndex(col);
-                    static float testf = 0;
-                    ImGui::InputFloat("##", &testf);
+                    char label[32];
+                    sprintf(label, "## %d %d", row, col);
+                    ImGui::SetNextItemWidth(40.f);
+                    ImGui::InputFloat(label, &matrix[col][row]);
                 }
-                else{
+                else if(col == 0 && row != 0){
                     ImGui::TableSetColumnIndex(col);
-                    ImGui::ColorEdit4("edit", color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha);
+                    char label[32];
+                    sprintf(label, "## %d %d", row, col);
+                    ImGui::ColorEdit4(label, colors[row - 1], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha);
+                }
+                else if(col != 0 && row == 0){
+                    ImGui::TableSetColumnIndex(col);
+                    char label[32];
+                    sprintf(label, "## %d %d", row, col);
+                    ImGui::ColorEdit4(label, colors[col - 1], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha);
                 }
 
             }
@@ -122,7 +147,6 @@ void particleLife(){
 
         float deltaTime = deltaClock.restart().asSeconds();
         frameCount++;
-
         if(fpsClock.getElapsedTime().asSeconds() >= 5.0f){
             averageFps = frameCount / 5.0f;
             frameCount = 0;

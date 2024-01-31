@@ -1,4 +1,4 @@
-#include "../include/Particles.hpp"
+#include "Particles.hpp"
 #include <SFML/System/Vector2.hpp>
 Particles::Particles(){
     rulesApply = false;

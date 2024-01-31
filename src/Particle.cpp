@@ -1,4 +1,4 @@
-#include "../include/Particle.hpp"
+#include "Particle.hpp"
 #include <limits>
 Particle::Particle(){
     sprite.setRadius(particleRadius);

@@ -1,4 +1,4 @@
-#include "../include/SpatialHashGrid.hpp"
+#include "SpatialHashGrid.hpp"
 
 SpatialHashGrid::SpatialHashGrid(){
     int numberOfRows = static_cast<int>(gameWindow.getSize().x / cellSize);

@@ -1,4 +1,4 @@
-#include "../include/Field.hpp"
+#include "Field.hpp"
 
 void Field::spawnRandom(std::vector<Particle> &Particles){
     std::random_device rd;

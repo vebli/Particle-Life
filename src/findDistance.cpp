@@ -1,4 +1,4 @@
-#include "../include/findDistance.hpp"
+#include "findDistance.hpp"
 
 const float findDistance(Particle p1, Particle p2){
     sf::Vector2f p1Vec = p1.getPosition();
