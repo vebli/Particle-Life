@@ -1,15 +1,20 @@
 #include "Particle.hpp"
 #include <limits>
+#include <string>
 Particle::Particle(){
     sprite.setRadius(particleRadius);
 };
-Particle::Particle(const sf::Color Color, const sf::Vector2f StartingPosition){
-    sprite.setFillColor(Color);
+Particle::Particle(float* Color, const sf::Vector2f StartingPosition){
+    sf::Color sfColor(Color[0], Color[1], Color[2], Color[3]);
+    sprite.setFillColor(sfColor);
     sprite.setRadius(particleRadius);
     sprite.setPosition(StartingPosition);
     position = StartingPosition;
     velocity = sf::Vector2f(0,0);  
-    color = colorToStr(Color);
+    color = Color;
+}
+Particle::~Particle(){
+    // delete[] color;
 }
 
 void Particle::setPosition(sf::Vector2f Position){
@@ -20,15 +25,15 @@ sf::Vector2f Particle::getPosition() const{
     return position;
 }
 void Particle::draw () const{
-    gameWindow.draw(sprite);
+    window.draw(sprite);
 }
 
-void Particle::setColor(sf::Color Color){
-    sprite.setFillColor(Color);
-    color = colorToStr(Color);
+void Particle::updateColor(){
+    sf::Color sfColor(color[0]*255, color[1]*255, color[2]*255, color[3]);
+    sprite.setFillColor(sfColor);
 }
 
-std::string Particle::getColor() const{
+float* Particle::getColor() const{
     return color;
 }
 
@@ -39,8 +44,8 @@ void Particle::addVelocity(sf::Vector2f v){
 
 void Particle::update(){
     sf::Vector2f newPosition(position.x + velocity.x * delta_t, position.y + velocity.y * delta_t);
-    float windowX = gameWindow.getSize().x;
-    float windowY = gameWindow.getSize().y;
+    float windowX = window.getSize().x;
+    float windowY = window.getSize().y;
 
     // std::cout << velocity.x << "," << velocity.y << std::endl;
     

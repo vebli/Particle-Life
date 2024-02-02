@@ -1,6 +1,6 @@
 #include "initParticles.hpp"
 
-std::vector<Particle> initParticles(const sf::Color color,const int amount, Field field){
+std::vector<Particle> initParticles(float* color, const int amount, Field field){
     std::vector<Particle> particles;
     particles.reserve(amount);
     for(int i = 0; i < amount; i++){

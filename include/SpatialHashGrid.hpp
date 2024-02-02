@@ -1,4 +1,5 @@
 #include <SFML/Graphics/Color.hpp>
+#include <functional>
 #include <unordered_map>
 #include <map>
 #include <vector>
@@ -10,9 +11,10 @@ class SpatialHashGrid{
 private:
 
 public:
-    // std::map<std::pair<int, int>, std::map<std::string, std::vector<Particle>>> grid;
-    std::vector<std::vector< std::unordered_map<std::string, std::vector<Particle>>>> grid;
+    // std::vector<std::vector< std::unordered_map<float*, std::vector<Particle>>>> grid;
+    std::vector<std::vector< std::unordered_map<const float*, std::vector<Particle>, std::hash<const float*>>>> grid;
+
     SpatialHashGrid();
     void insert(const Particle& particle);
-    std::vector<Particle>& getCellParticles(std::string color, int cellX, int cellY);
+    std::vector<Particle>& getCellParticles(float* color, int cellX, int cellY);
 };

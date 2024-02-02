@@ -1,4 +1,5 @@
 #include "Particles.hpp"
+#include "config.hpp"
 #include <SFML/System/Vector2.hpp>
 Particles::Particles(){
     rulesApply = false;
@@ -9,8 +10,54 @@ void Particles::addVector(const std::vector<Particle>& particleVector){
         grid.insert(particle);
     }
 }
+void Particles::removeVector(float* Color){
+    for(int x = 0; x < grid.grid.size(); x++){
+        for(int y = 0; y < grid.grid[x].size(); y++){
+            const auto& it = grid.grid[x][y].find(Color);
+            if(it != grid.grid[x][y].end()){
+                grid.grid[x][y].erase(it);
+            }
+        }
+    }
+}
+void Particles::updateColor(float* color){
+    for(int x = 0; x < grid.grid.size(); x++){
+        for(int y = 0; y < grid.grid[x].size(); y++){
+            const auto& it = grid.grid[x][y].find(color);
+            if(it != grid.grid[x][y].end()){    
+                for(auto& particle : (*it).second){
+                    particle.updateColor();
+                }
+            }
+        }
+    }
+}
+
 void Particles::addRule(Rule rule){
-    rules.push_back(rule);
+    bool foundRule = false;
+    for(int i = 0; i < rules.size(); i ++){
+        if(rule.color1 == rules[i].color1 && rule.color2 == rules[i].color2){
+            if(rule.magnitude == 0){
+                rules.erase(rules.begin() + i);
+            }
+            else if(rule.magnitude != rules[i].magnitude){
+                rules[i].magnitude = rule.magnitude;
+            }
+            foundRule = true;
+            break;
+        }
+    }
+    if(!foundRule && rule.magnitude != 0){
+        rules.push_back(rule);
+    }
+}
+int Particles::findRuleIndex(float* color1, float* color2){
+    for(int i = 0; i < rules.size(); i++){
+        if(rules[i].color1 == color1 && rules[i].color2 == color2){
+            return -1;
+        }
+    }
+    return -1;
 }
 
 void Particles::draw(){

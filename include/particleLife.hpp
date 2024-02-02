@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <iostream>
+#include <optional>
 #include "Particle.hpp"
 #include "Particles.hpp"
 #include "Field.hpp"

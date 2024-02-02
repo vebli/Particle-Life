@@ -4,4 +4,4 @@
 #include "Field.hpp"
 #include "Particle.hpp"
 
-std::vector<Particle> initParticles(sf::Color color, int amount, Field field);
+std::vector<Particle> initParticles(float* color, int amount, Field field);

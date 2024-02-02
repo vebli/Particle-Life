@@ -1,149 +1,180 @@
 #include "../include/particleLife.hpp"
+#include "config.hpp"
+#include "imgui.h"
+#include <stdexcept>
 #include <string>
-
+#define customColorEditFlags ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha
 void particleLife(){
+    static int amountOfParticleColors = defaultAmountOfParticleColors;
     sf::Clock deltaClock;
     sf::Clock fpsClock;
     int frameCount = 0;
     int averageFps = 0.0f;
     sf::CircleShape dot;
     std::vector<sf::CircleShape> visualgrid;
-    gameWindow.setFramerateLimit(fpsCap);
+    window.setFramerateLimit(fpsCap);
     ImGui::CreateContext();
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    bool some_bool_idk_about = ImGui::SFML::Init(gameWindow);
+    bool some_bool_idk_about = ImGui::SFML::Init(window);
     dot.setRadius(0.4);
-    for(int i = 0; i < gameWindow.getSize().x; i+= thresholdRadius){
-        for(int j = 0; j < gameWindow.getSize().y; j += thresholdRadius){
+    std::array<std::array<float,colorDimensions>, matrixSize - 1> previousColors; 
+    for(int i = 0; i < defaultColors.size(); i++){
+        for(int j = 0; j < colorDimensions; j++){
+            previousColors[i][j] = defaultColors[i][j];
+        }
+    }
+    for(int i = 0; i < window.getSize().x; i+= thresholdRadius){
+        for(int j = 0; j < window.getSize().y; j += thresholdRadius){
             dot.setPosition(sf::Vector2f(i,j));
             visualgrid.push_back(dot);
         }
     }
     // Field field(sf::Vector2f(thresholdRadius*3, thresholdRadius*3), sf::Vector2f(thresholdRadius*4,thresholdRadius*4));
-    Field field(sf::Vector2f(0, 0), sf::Vector2f(gameWindow.getSize().x, gameWindow.getSize().y));
+    Field field(sf::Vector2f(0, 0), sf::Vector2f(window.getSize().x, window.getSize().y));
     Particles particles;
-    Particle p1;
-    // p1.setColor(sf::Color::Blue);
-    // p1.setPosition(sf::Vector2f(thresholdRadius*3, thresholdRadius*3));
-    // p1.addVelocity(sf::Vector2f(50,50));
-    // std::vector<Particle> testvec;
-    // testvec.push_back(p1);
-    // p1.setPosition(sf::Vector2f(thresholdRadius*4, thresholdRadius*4));
-    // p1.addVelocity(sf::Vector2f(-100,-100));
-    // testvec.push_back(p1);
-    // particles.addVector(testvec);
-    particles.addVector((initParticles(sf::Color::Yellow, 1000, field)));
-    particles.addVector((initParticles(sf::Color::Green, 1000, field)));
-    particles.addVector((initParticles(sf::Color::Blue, 1000, field)));
-
-    particles.addRule(Rule(colorToStr(sf::Color::Blue), colorToStr(sf::Color::Blue), 0.2));
-    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Green), 0.5));
-    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Green), -0.5));
-    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Yellow), 0.5));
-    particles.addRule(Rule(colorToStr(sf::Color::Green), colorToStr(sf::Color::Blue), 0.5));
-    particles.addRule(Rule(colorToStr(sf::Color::Yellow), colorToStr(sf::Color::Blue), 0.2));
-
-    while (gameWindow.isOpen()){
+    while (window.isOpen()){
         sf::Event event;
-        while (gameWindow.pollEvent(event)){
-            ImGui::SFML::ProcessEvent(gameWindow, event);
+        while (window.pollEvent(event)){
+            ImGui::SFML::ProcessEvent(window, event);
             if (event.type == sf::Event::Closed){
-                gameWindow.close();
+                window.close();
             }
         }
 
-        ImGui::SFML::Update(gameWindow, sf::seconds(1.0f / fpsCap));
+        ImGui::SFML::Update(window, sf::seconds(1.0f / fpsCap));
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+
         ImGui::Begin("Matrix Editor", nullptr, ImGuiWindowFlags_DockNodeHost | ImGuiWindowFlags_NoResize);
 
-        int selectedRow = -1;
-        int selectedCol = -1;
-        int matrixSize = 7;
-        int matrixData[matrixSize][matrixSize];
-        int amountOfOptions = 1;
+        static float matrix[matrixSize][matrixSize];
+        int particleAmount = 12;
         
         ImGui::ShowDemoWindow();
 
-        static float temp_delta_t = 0;
-        ImGui::SliderFloat("delta_t", &temp_delta_t,  0.01f, 1);
+        ImGui::SetNextItemWidth(20);
+        ImGui::Text("%d fps", averageFps);
 
-        bool showFps = false;
-        if(ImGui::Checkbox("show Fps", &showFps)){
-        }
+        ImGui::SliderFloat("delta_t", &delta_t,  0.01f, 1);
+        ImGui::Separator();
+
+
+        ImGui::Separator();
 
         if(ImGui::Button("restart")){
             //Restart Simulation
-        };
+        }
 
         ImGui::SameLine();
     
         if(ImGui::Button("pause")){
             //pause simulation
-        };
+        }
 
         ImGui::Spacing();
         ImGui::Separator();
 
         if(ImGui::Button("randomize")){
-            //random matrix 
-        };
-
-        static float color1[] = {255.f, 0.f, 0.f ,255.f};
-        static float color2[] = {0.f, 255.f, 0.f, 255.f};
-        static float color3[] = {0.f, 0.f, 255.f, 255.f};
-        static float color4[] = {255.f, 255.f, 0.f, 255.f};
-        static float color5[] = {0.f, 255.f, 255.f, 255.f};
-        static float color6[] = {100.f, 255.f, 100.f, 255.f};
-        std::vector<float*> colors{color1, color2, color3, color4, color5, color6};
-        ImGui::BeginTable("Matrix", matrixSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit);
-        float matrix[matrixSize][matrixSize];
-        for (int y = 0; y < matrixSize; y++){
-            for(int x = 0; x < matrixSize; x++){
-                matrix[x][y] = 0;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<float> distribution(-1,1); 
+            for(int x = 0; x < amountOfParticleColors; x++){
+                for(int y = 0; y < amountOfParticleColors; y++){
+                    float randomValue = distribution(gen);
+                    matrix[x][y] = randomValue;
+                }
             }
         }
-        for (int row = 0 ; row < matrixSize; row++) {
-            ImGui::TableNextRow();
-            for (int col = 0; col < matrixSize; col++) {
-                if(col == 0 && row == 0)
-                    continue;
-                if(col != 0 && row != 0){
-                    ImGui::TableSetColumnIndex(col);
-                    char label[32];
-                    sprintf(label, "## %d %d", row, col);
-                    ImGui::SetNextItemWidth(40.f);
-                    ImGui::InputFloat(label, &matrix[col][row]);
-                }
-                else if(col == 0 && row != 0){
-                    ImGui::TableSetColumnIndex(col);
-                    char label[32];
-                    sprintf(label, "## %d %d", row, col);
-                    ImGui::ColorEdit4(label, colors[row - 1], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha);
-                }
-                else if(col != 0 && row == 0){
-                    ImGui::TableSetColumnIndex(col);
-                    char label[32];
-                    sprintf(label, "## %d %d", row, col);
-                    ImGui::ColorEdit4(label, colors[col - 1], ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha);
-                }
+        ImGui::Spacing();
+        ImGui::Separator();
 
+        if(amountOfParticleColors < 6){
+            if(ImGui::Button("Add")){
+                particles.addVector((initParticles(defaultColors[amountOfParticleColors], defaultAmountOfColoredParticles[amountOfParticleColors] , field)));
+                amountOfParticleColors++;
+            }
+        }
+        ImGui::SameLine();
+        if(amountOfParticleColors > 0){
+            if(ImGui::Button("remove")){
+                particles.removeVector(defaultColors[amountOfParticleColors - 1]);
+                amountOfParticleColors--;
             }
         }
 
-        ImGui::EndTable();
+        ImGui::Separator();
+
+        ImGui::Text("Particle Amount");
+        for(int row = 0; row < amountOfParticleColors; row++){
+            char label[32];
+            sprintf(label, "## %d", row);
+            ImGui::ColorEdit4(label, defaultColors[row], customColorEditFlags);
+            ImGui::SameLine();
+            ImGui::InputInt(label, &defaultAmountOfColoredParticles[row], ImGuiInputTextFlags_CharsDecimal);
+        }
+
+        ImGui::Separator();
+        ImGui::Text("Attraction Factor Matrix");
+        // ImGui::SameLine();
+        // ImGui::Text("(?)");
+        //   if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+        //   {
+        //     ImGui::SetTooltip("");
+        //   }
+        for(int i = 0; i < defaultColors.size(); i++){
+            for(int j = 0; j < colorDimensions; j++){
+                if(defaultColors[i][j] != previousColors[i][j]){
+                    particles.updateColor(defaultColors[i]);
+                    previousColors[i][j] = defaultColors[i][j];
+                }
+            }
+        }
+        if(ImGui::BeginTable("Matrix", matrixSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)){
+            for (int row = 0 ; row <= amountOfParticleColors; row++) {
+                ImGui::TableNextRow();
+                for (int col = 0; col <= amountOfParticleColors; col++) {
+                    char label[amountOfParticleColors*amountOfParticleColors];
+                    sprintf(label, "## %d %d", row, col);
+                    if(col == 0 && row == 0)
+                        continue;
+                    if(col != 0 && row != 0){
+                        ImGui::TableSetColumnIndex(col);
+                        ImGui::SetNextItemWidth(40.f);
+                        ImGui::InputFloat(label, &matrix[row - 1][col - 1]);
+                    }
+                    else if(col == 0){
+                        ImGui::TableSetColumnIndex(col);
+                        ImGui::ColorEdit4(label, defaultColors[row - 1], customColorEditFlags);
+                    }
+                    else if(row == 0){
+                        ImGui::TableSetColumnIndex(col);
+                        ImGui::ColorEdit4(label, defaultColors[col - 1], customColorEditFlags);
+                    }
+
+                }
+            }
+
+            ImGui::EndTable();
+        }
+
         ImGui::End();
         
+        //matrix 
+        for(int i = 0; i < matrixSize; i++){
+            for(int j = 0; j < matrixSize; j++){
+                particles.addRule(Rule(defaultColors[i], defaultColors[j], matrix[i][j]));
+            }
+        }
         //draw
         particles.update();
-        gameWindow.clear();
+        window.clear();
         for(auto& dot: visualgrid){
-            gameWindow.draw(dot);
+            window.draw(dot);
         }
         particles.draw();
         particles.applyRules();
         
-        ImGui::SFML::Render(gameWindow);
-        gameWindow.display();
+        ImGui::SFML::Render(window);
+        window.display();
 
         float deltaTime = deltaClock.restart().asSeconds();
         frameCount++;
@@ -151,7 +182,6 @@ void particleLife(){
             averageFps = frameCount / 5.0f;
             frameCount = 0;
             fpsClock.restart();
-            std::cout << averageFps << "fps" << std::endl;
         }
     }
     ImGui::DestroyContext();
