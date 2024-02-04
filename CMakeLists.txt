@@ -9,9 +9,9 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 # Copy image files to the build directory
 set(CMAKE_CXX_STANDARD 23)
-# set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Debug)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -fno-omit-frame-pointer -fsanitize=address")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")  
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")  
 
 set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/lib/imgui/imgui.cpp

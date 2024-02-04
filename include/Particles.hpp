@@ -1,6 +1,8 @@
 #include "Particle.hpp"
 #include "Rule.hpp"
 #include "config.hpp"
+#include "Field.hpp"
+#include "initParticles.hpp"
 #include "findDistance.hpp"
 #include "SpatialHashGrid.hpp"
 #include <SFML/Graphics/Color.hpp>
@@ -19,16 +21,21 @@ public:
     void removeVector(float*);
     void addRule(Rule rule);
     int findRuleIndex(float* color1, float* color2);
-    void updateColor(float* color);
-    // void manipulateParticlesOfSameColor(float* Color, std::function<void(std::vector<Particle>)> lambda);
     void draw();
+    void updateAmount();
+    void updatePosition();
+    void updateColors();
     void update();
-    void applyRules();
 public:
     bool rulesApply;
     std::vector<Rule> rules;
 private:
     float force(float distance, float attraction);
+    void manipulateParticlesOfSameColor(float* color, std::function<void(std::vector<Particle>&)> lambda);
 private:
     SpatialHashGrid grid;
+    std::array<std::array<float,colorDimensions>, matrixSize - 1> previousColors; 
+    std::array<int, matrixSize - 1> previousAmounts;
 };
+
+

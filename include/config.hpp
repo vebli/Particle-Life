@@ -10,7 +10,7 @@
 //window
 
 // Particles
-inline sf::RenderWindow window(sf::VideoMode(800, 600), "Particle Life");
+inline sf::RenderWindow sfWindow(sf::VideoMode(800, 600), "Particle Life");
 inline float delta_t = 0.01;
 inline const float particleRadius = 2;
 inline const float thresholdRadius = 50;
@@ -28,7 +28,7 @@ inline static float color3[] = {0.f, 0.f, 255.f, 255.f};
 inline static float color4[] = {255.f, 255.f, 0.f, 255.f};
 inline static float color5[] = {0.f, 255.f, 255.f, 255.f};
 inline static float color6[] = {100.f, 255.f, 100.f, 255.f};
-inline std::array<float*, matrixSize - 1> defaultColors = {color1, color2, color3, color4, color5, color6};
+inline constexpr std::array<float*, matrixSize - 1> defaultColors = {color1, color2, color3, color4, color5, color6};
 inline static int defaultAmountOfParticleColors = 0; 
-inline static int defaultAmountOfColoredParticles[] = {100, 100, 100, 100, 100, 100, 100};
+inline int defaultAmountOfColoredParticles[6] = {100, 100, 100, 100, 100, 100};
 #endif // CONF

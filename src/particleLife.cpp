@@ -1,4 +1,4 @@
-#include "../include/particleLife.hpp"
+#include "particleLife.hpp"
 #include "config.hpp"
 #include "imgui.h"
 #include <stdexcept>
@@ -12,37 +12,29 @@ void particleLife(){
     int averageFps = 0.0f;
     sf::CircleShape dot;
     std::vector<sf::CircleShape> visualgrid;
-    window.setFramerateLimit(fpsCap);
+    sfWindow.setFramerateLimit(fpsCap);
     ImGui::CreateContext();
     ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    bool some_bool_idk_about = ImGui::SFML::Init(window);
+    bool some_bool_idk_about = ImGui::SFML::Init(sfWindow);
     dot.setRadius(0.4);
-    std::array<std::array<float,colorDimensions>, matrixSize - 1> previousColors; 
-    for(int i = 0; i < defaultColors.size(); i++){
-        for(int j = 0; j < colorDimensions; j++){
-            previousColors[i][j] = defaultColors[i][j];
-        }
-    }
-    for(int i = 0; i < window.getSize().x; i+= thresholdRadius){
-        for(int j = 0; j < window.getSize().y; j += thresholdRadius){
+    for(int i = 0; i < sfWindow.getSize().x; i+= thresholdRadius){
+        for(int j = 0; j < sfWindow.getSize().y; j += thresholdRadius){
             dot.setPosition(sf::Vector2f(i,j));
             visualgrid.push_back(dot);
         }
     }
-    // Field field(sf::Vector2f(thresholdRadius*3, thresholdRadius*3), sf::Vector2f(thresholdRadius*4,thresholdRadius*4));
-    Field field(sf::Vector2f(0, 0), sf::Vector2f(window.getSize().x, window.getSize().y));
     Particles particles;
-    while (window.isOpen()){
+    while (sfWindow.isOpen()){
         sf::Event event;
-        while (window.pollEvent(event)){
-            ImGui::SFML::ProcessEvent(window, event);
+        while (sfWindow.pollEvent(event)){
+            ImGui::SFML::ProcessEvent(sfWindow, event);
             if (event.type == sf::Event::Closed){
-                window.close();
+                sfWindow.close();
             }
         }
 
-        ImGui::SFML::Update(window, sf::seconds(1.0f / fpsCap));
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+        ImGui::SFML::Update(sfWindow, sf::seconds(1.0f / fpsCap));
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),ImGuiDockNodeFlags_PassthruCentralNode);
 
         ImGui::Begin("Matrix Editor", nullptr, ImGuiWindowFlags_DockNodeHost | ImGuiWindowFlags_NoResize);
 
@@ -59,15 +51,16 @@ void particleLife(){
 
 
         ImGui::Separator();
-
-        if(ImGui::Button("restart")){
-            //Restart Simulation
-        }
-
-        ImGui::SameLine();
     
-        if(ImGui::Button("pause")){
-            //pause simulation
+        if(particles.rulesApply){
+            if(ImGui::Button("pause")){
+                particles.rulesApply = false;
+            }
+        }
+        else{
+            if(ImGui::Button("unpause")){
+                particles.rulesApply = true;
+            }
         }
 
         ImGui::Spacing();
@@ -89,7 +82,7 @@ void particleLife(){
 
         if(amountOfParticleColors < 6){
             if(ImGui::Button("Add")){
-                particles.addVector((initParticles(defaultColors[amountOfParticleColors], defaultAmountOfColoredParticles[amountOfParticleColors] , field)));
+                particles.addVector((initParticles(defaultColors[amountOfParticleColors], defaultAmountOfColoredParticles[amountOfParticleColors], Field())));
                 amountOfParticleColors++;
             }
         }
@@ -104,12 +97,12 @@ void particleLife(){
         ImGui::Separator();
 
         ImGui::Text("Particle Amount");
-        for(int row = 0; row < amountOfParticleColors; row++){
+        for(int i = 0; i < amountOfParticleColors; i++){
             char label[32];
-            sprintf(label, "## %d", row);
-            ImGui::ColorEdit4(label, defaultColors[row], customColorEditFlags);
+            sprintf(label, "## %d", i);
+            ImGui::ColorEdit4(label, defaultColors[i], customColorEditFlags);
             ImGui::SameLine();
-            ImGui::InputInt(label, &defaultAmountOfColoredParticles[row], ImGuiInputTextFlags_CharsDecimal);
+            ImGui::InputInt(label, &(defaultAmountOfColoredParticles[i]), ImGuiInputTextFlags_CharsDecimal);
         }
 
         ImGui::Separator();
@@ -120,14 +113,6 @@ void particleLife(){
         //   {
         //     ImGui::SetTooltip("");
         //   }
-        for(int i = 0; i < defaultColors.size(); i++){
-            for(int j = 0; j < colorDimensions; j++){
-                if(defaultColors[i][j] != previousColors[i][j]){
-                    particles.updateColor(defaultColors[i]);
-                    previousColors[i][j] = defaultColors[i][j];
-                }
-            }
-        }
         if(ImGui::BeginTable("Matrix", matrixSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)){
             for (int row = 0 ; row <= amountOfParticleColors; row++) {
                 ImGui::TableNextRow();
@@ -166,15 +151,14 @@ void particleLife(){
         }
         //draw
         particles.update();
-        window.clear();
+        sfWindow.clear();
         for(auto& dot: visualgrid){
-            window.draw(dot);
+            sfWindow.draw(dot);
         }
         particles.draw();
-        particles.applyRules();
         
-        ImGui::SFML::Render(window);
-        window.display();
+        ImGui::SFML::Render(sfWindow);
+        sfWindow.display();
 
         float deltaTime = deltaClock.restart().asSeconds();
         frameCount++;

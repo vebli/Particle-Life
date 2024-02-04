@@ -25,7 +25,7 @@ sf::Vector2f Particle::getPosition() const{
     return position;
 }
 void Particle::draw () const{
-    window.draw(sprite);
+    sfWindow.draw(sprite);
 }
 
 void Particle::updateColor(){
@@ -44,8 +44,8 @@ void Particle::addVelocity(sf::Vector2f v){
 
 void Particle::update(){
     sf::Vector2f newPosition(position.x + velocity.x * delta_t, position.y + velocity.y * delta_t);
-    float windowX = window.getSize().x;
-    float windowY = window.getSize().y;
+    float windowX = sfWindow.getSize().x;
+    float windowY = sfWindow.getSize().y;
 
     // std::cout << velocity.x << "," << velocity.y << std::endl;
     
