@@ -1,9 +1,9 @@
+#include "colorButtonRGB.hpp"
 #include "particleLife.hpp"
 #include "config.hpp"
 #include "imgui.h"
 #include <stdexcept>
 #include <string>
-#define customColorEditFlags ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoAlpha
 void particleLife(){
     static int amountOfParticleColors = defaultAmountOfParticleColors;
     sf::Clock deltaClock;
@@ -35,18 +35,15 @@ void particleLife(){
 
         ImGui::SFML::Update(sfWindow, sf::seconds(1.0f / fpsCap));
         ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(),ImGuiDockNodeFlags_PassthruCentralNode);
-
+        ImGui::SetNextWindowSize(ImVec2(350, 600));
         ImGui::Begin("Matrix Editor", nullptr, ImGuiWindowFlags_DockNodeHost | ImGuiWindowFlags_NoResize);
 
         static float matrix[matrixSize][matrixSize];
-        int particleAmount = 12;
         
-        ImGui::ShowDemoWindow();
-
         ImGui::SetNextItemWidth(20);
         ImGui::Text("%d fps", averageFps);
 
-        ImGui::SliderFloat("delta_t", &delta_t,  0.01f, 1);
+        ImGui::SliderFloat("delta_t", &delta_t,  0.01f, 0.05);
         ImGui::Separator();
 
 
@@ -66,17 +63,6 @@ void particleLife(){
         ImGui::Spacing();
         ImGui::Separator();
 
-        if(ImGui::Button("randomize")){
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_real_distribution<float> distribution(-1,1); 
-            for(int x = 0; x < amountOfParticleColors; x++){
-                for(int y = 0; y < amountOfParticleColors; y++){
-                    float randomValue = distribution(gen);
-                    matrix[x][y] = randomValue;
-                }
-            }
-        }
         ImGui::Spacing();
         ImGui::Separator();
 
@@ -100,12 +86,25 @@ void particleLife(){
         for(int i = 0; i < amountOfParticleColors; i++){
             char label[32];
             sprintf(label, "## %d", i);
-            ImGui::ColorEdit4(label, defaultColors[i], customColorEditFlags);
+            colorButtonRGB(label, defaultColors[i], customColorEditFlags);
             ImGui::SameLine();
             ImGui::InputInt(label, &(defaultAmountOfColoredParticles[i]), ImGuiInputTextFlags_CharsDecimal);
         }
 
         ImGui::Separator();
+
+        if(ImGui::Button("randomize")){
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<float> distribution(-1,1); 
+            for(int x = 0; x < amountOfParticleColors; x++){
+                for(int y = 0; y < amountOfParticleColors; y++){
+                    float randomValue = distribution(gen);
+                    matrix[x][y] = randomValue;
+                }
+            }
+        }
+
         ImGui::Text("Attraction Factor Matrix");
         // ImGui::SameLine();
         // ImGui::Text("(?)");
@@ -113,7 +112,7 @@ void particleLife(){
         //   {
         //     ImGui::SetTooltip("");
         //   }
-        if(ImGui::BeginTable("Matrix", matrixSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)){
+        if(ImGui::BeginTable("Matrix", tableSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)){
             for (int row = 0 ; row <= amountOfParticleColors; row++) {
                 ImGui::TableNextRow();
                 for (int col = 0; col <= amountOfParticleColors; col++) {
@@ -128,11 +127,11 @@ void particleLife(){
                     }
                     else if(col == 0){
                         ImGui::TableSetColumnIndex(col);
-                        ImGui::ColorEdit4(label, defaultColors[row - 1], customColorEditFlags);
+                        colorButtonRGB(label, defaultColors[row - 1], customColorEditFlags);
                     }
                     else if(row == 0){
                         ImGui::TableSetColumnIndex(col);
-                        ImGui::ColorEdit4(label, defaultColors[col - 1], customColorEditFlags);
+                        colorButtonRGB(label, defaultColors[col - 1], customColorEditFlags);
                     }
 
                 }
@@ -141,6 +140,7 @@ void particleLife(){
             ImGui::EndTable();
         }
 
+        
         ImGui::End();
         
         //matrix 

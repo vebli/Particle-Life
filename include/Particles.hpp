@@ -34,8 +34,8 @@ private:
     void manipulateParticlesOfSameColor(float* color, std::function<void(std::vector<Particle>&)> lambda);
 private:
     SpatialHashGrid grid;
-    std::array<std::array<float,colorDimensions>, matrixSize - 1> previousColors; 
-    std::array<int, matrixSize - 1> previousAmounts;
+    std::array<std::array<float,colorDimensions>, matrixSize> previousColors; 
+    std::array<int, matrixSize> previousAmounts;
 };
 
 

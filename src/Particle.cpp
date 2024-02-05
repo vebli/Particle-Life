@@ -1,9 +1,4 @@
 #include "Particle.hpp"
-#include <limits>
-#include <string>
-Particle::Particle(){
-    sprite.setRadius(particleRadius);
-};
 Particle::Particle(float* Color, const sf::Vector2f StartingPosition){
     sf::Color sfColor(Color[0], Color[1], Color[2], Color[3]);
     sprite.setFillColor(sfColor);
@@ -29,7 +24,7 @@ void Particle::draw () const{
 }
 
 void Particle::updateColor(){
-    sf::Color sfColor(color[0]*255, color[1]*255, color[2]*255, color[3]);
+    sf::Color sfColor(color[0], color[1], color[2], color[3]);
     sprite.setFillColor(sfColor);
 }
 
@@ -42,7 +37,7 @@ void Particle::addVelocity(sf::Vector2f v){
     velocity.y += v.y;
 }
 
-void Particle::update(){
+void Particle::updatePosition(){
     sf::Vector2f newPosition(position.x + velocity.x * delta_t, position.y + velocity.y * delta_t);
     float windowX = sfWindow.getSize().x;
     float windowY = sfWindow.getSize().y;

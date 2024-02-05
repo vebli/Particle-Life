@@ -43,7 +43,10 @@ void Particles::updateColors(){
                         particle.updateColor(); 
                     }
                 });
-                previousColors[i][j] = defaultColors[i][j];
+                for(int k = j; k < colorDimensions; k++){
+                    previousColors[i][k] = defaultColors[i][k];
+                }
+                break;
             }
         }
    }
@@ -57,13 +60,15 @@ void Particles::updateAmount(){
                 sum += particles.size();
             });
             int difference = sum - defaultAmountOfColoredParticles[i];
-            if(difference < 0){
+            bool addedParticles = difference < 0;
+            bool removedParticles = difference > 0;
+            if(addedParticles){
                 std::vector<Particle> newParticles = initParticles(color, std::abs(difference), Field());
                 for(auto& particle : newParticles){
                     grid.insert(particle);
                 }
             }
-            else if(difference > 0){
+            else if(removedParticles){
                 std::random_device rd;
                 std::mt19937 gen(rd());
                 std::uniform_real_distribution<float> distributionX(0, sfWindow.getSize().x/cellSize); 
@@ -127,8 +132,8 @@ float Particles::force(float distance, float attraction){
     if(distance < particleEquilibrium){
         return distance/particleEquilibrium - 1;
     }
-    else if(particleEquilibrium < distance && distance < 1){
-        return attraction * (1 - (std::abs(2.85 * distance - 1 - 2.85 * particleEquilibrium))/(1-particleEquilibrium));
+    else if(distance > particleEquilibrium && distance < 1){
+        return attraction * (1 - (std::abs(2 * distance - 1 - particleEquilibrium))/(1-particleEquilibrium));
     }
     else{
         return 0;
@@ -196,10 +201,10 @@ void Particles::updatePosition(){
                             static_cast<int>(particle.getPosition().x) == cellX &&
                             static_cast<int>(particle.getPosition().y) == cellY
                       ){
-                        particle.update(); 
+                        particle.updatePosition(); 
                         continue;
                     }
-                    particle.update(); 
+                    particle.updatePosition(); 
                     grid.insert(particle);
                     particles.erase(particles.begin() + i);
                 }
@@ -214,4 +219,19 @@ void Particles::update(){
     if(rulesApply){
         updatePosition();
     }
+    // if(!rules.empty())
+    //     std::cout<< "rules:\t" << rules.size() << std::endl; 
+    // else{
+    //     std::cout << "rules:\t" << "empty" << std::endl;
+    // }
+    // int sum = 0;
+    // for(int x = 0; x < grid.grid.size(); x++){
+    //     for(int y = 0; y < grid.grid[x].size(); y++){
+    //         for(auto& color : grid.grid[x][y]){
+    //             sum += color.second.size();
+    //         }
+    //     }
+    // }
+    // std::cout << "particles:\t" << sum << std::endl;
+    // std::cout << std::endl;
 }

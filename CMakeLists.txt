@@ -22,7 +22,7 @@ set(IMGUI_SOURCES
     ${CMAKE_SOURCE_DIR}/lib/imgui-sfml/imgui-SFML.cpp
 )
 set(SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/src/colorToStr.cpp
+    ${CMAKE_SOURCE_DIR}/src/colorButtonRGB.cpp
     ${CMAKE_SOURCE_DIR}/src/findDistance.cpp
     ${CMAKE_SOURCE_DIR}/src/Rule.cpp
     ${CMAKE_SOURCE_DIR}/src/Particle.cpp

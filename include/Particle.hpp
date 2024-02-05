@@ -1,7 +1,6 @@
 #ifndef PARTICLE 
 #define PARTICLE
 #include "config.hpp"
-#include "colorToStr.hpp"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -20,7 +19,7 @@ public:
     void setPosition(sf::Vector2f Position);
     void draw() const;
     void addVelocity(sf::Vector2f velocity);
-    void update();
+    void updatePosition();
     sf::Vector2f getVelocity();
 
 private:
