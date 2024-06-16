@@ -20,7 +20,7 @@
                 configurePhase = ''
                     mkdir -p build   
                     cd build  
-                    cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+                    cmake -DCMAKE_BUILD_TYPE=Release ..
                     mkdir -p bin
                     '';
                 buildPhase = '' 
@@ -32,7 +32,7 @@
                 '';
         };
 
-        app.${system}.default = {
+        apps.${system}.default = {
             type = "app";
             program = "${self.packages.${system}.default}/bin/Particle-Life";
         };
