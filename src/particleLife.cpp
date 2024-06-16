@@ -113,10 +113,10 @@ void particleLife(){
             ImGui::SetTooltip("");
           }
         if(ImGui::BeginTable("Matrix", tableSize, ImGuiTableFlags_Borders | ImGuiTableFlags_SizingFixedFit)){
-            for (int row = 0 ; row < amountOfParticleColors; row++) {
+            for (int row = 0 ; row <= amountOfParticleColors; row++) {
                 ImGui::TableNextRow();
-                for (int col = 0; col < amountOfParticleColors; col++) {
-                    char label[amountOfParticleColors*amountOfParticleColors];
+                for (int col = 0; col <= amountOfParticleColors; col++) {
+                    char label[26];
                     sprintf(label, "## %d %d", row, col);
                     if(col == 0 && row == 0)
                         continue;
