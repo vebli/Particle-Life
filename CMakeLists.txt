@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.0)
-set(PROJECT_NAME ParticleLife)
+cmake_minimum_required(VERSION 3.5)
+set(PROJECT_NAME Particle-Life)
 project(${PROJECT_NAME})
 find_package(
   SFML 2.5

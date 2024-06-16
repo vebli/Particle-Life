@@ -2,11 +2,12 @@
 
 pkgs-unstable.mkShell {
     buildInputs = with pkgs-unstable;[
-        gcc sfml
-        libGLU
+        gcc 
+        gnumake
         cmake
+        sfml
+        libGLU
         glfw-wayland
         glfw
-        gdb
     ];
 }
